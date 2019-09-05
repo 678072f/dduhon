@@ -1,0 +1,56 @@
+This file describes how the Makefiles should be formatted. 
+
+Program = Executable
+Object file = file.o <- .o extention
+
+All text surrounded by <> is a placeholder for the file names. <Program 1, 2, 3, etc.> is for each individual executable that will be built. <Object File 1, 2, 3, etc.> is for each *.o file needed by the programs. <CPP> and <H> are placeholders for the .cpp and .h files to be compiled.
+
+***NOTE: <Object File 1>, <Object 1>, and <O 1> (and all subsequent numbers) all represent the object files for each program. They are named differently to avoid confusing the object files for each program as being the same.***
+
+------------------------------------------------------------------------------------------
+START HERE
+------------------------------------------------------------------------------------------
+
+# -*- Makefile -*-
+
+all: <Program 1> <Program 2> <Program 3>
+
+<Program 1>: <Object File 1>.o <Object File 2>.o <Object File 3>.o
+    g++ <Object File 1>.o <Object File 2>.o <Object File 3>.o -o <Program 1>
+
+<Object File 1>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Object File 2>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Object File 3>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Program 2>: <Object 1>.o <Object 2>.o <Object 3>.o
+    g++ <Object 1>.o <Object 2>.o <Object 3>.o -o <Program 2>
+
+<Object 1>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Object 2>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Object 3>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<Program 3>: <O 1>.o <O 2>.o <O 3>.o
+    g++ <O 1>.o <O 2>.o <O 3>.o -o <Program 3>
+
+<O 1>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<O 2>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+<O 3>.o: <CPP>.cpp <H>.h
+    g++ -c <CPP>.cpp
+
+clean:
+	#For clean, replace <Program x> with the name of the EXECUTABLE ONLY.
+	rm -rf *.o <Program 1> <Program 2> <Program 3>

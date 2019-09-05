@@ -1,0 +1,101 @@
+Documentation for the C/C++ programs for using the GPIO header pins on Raspberry Pi 3 model B (V1.2). 
+
+This file is an Example of how programs using the GPIO.cpp and GPIO.h files should be formatted. All text within <> brackets should be replaced with the correct code needed for the application of these files. This file should only be changed where indicated for the program to work correctly.
+
+If you need support with the code, if somethings isn't working, or if something can be improved, please contact me at:
+
+danielgduhon@gmail.com
+
+------------------------------------------------------------------------------------------
+START HERE
+------------------------------------------------------------------------------------------
+
+//
+//  GPIO_<PROGRAM>.cpp
+//  GPIO Class
+//
+//  Created by Daniel Duhon.
+//
+
+//Includes
+#include <stdio.h>
+#include <iostream>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <signal.h>
+#include "GPIO.h"
+//-----------------
+
+using namespace std;
+
+//For stopping program, Press "Ctrl^C"
+void sigHandler(int sig);
+
+bool ctrlCPressed = false;
+
+//Main Loop
+int main(void)
+{
+    //Set up "sigHandler" (For detecting 'Ctrl^C' keypress)
+    struct sigaction sigStruct;
+    sigStruct.sa_handler = sigHandler;
+    sigStruct.sa_flags = 0;
+    sigemptyset(&sigStruct.sa_mask);
+    
+    if (sigaction(SIGINT, &sigStruct, NULL) == -1) {
+        cout << "Problem with sigaction" << endl;
+        exit(1);
+    }
+    
+    //Set up pins to be used, only change the <#> to the pin number. Repeat the same line for each new pin.
+    GPIOClass* gpio<#> = new GPIOClass("<#>");
+    
+    //Export Pins, only the <#> needs to be changed to the pin number
+    gpio<#>->exportGPIO();
+    //...
+    
+    cout << " GPIO pins exported " << endl;
+    
+    //Set input or output pins, Replace all <#> with the pin number(s) and <DIRECTION> with the pin direction ("in" or "out")
+    gpio<XX>->setDirGPIO("<DIRECTION>");
+    
+    //...
+    
+    cout << " Set GPIO pin directions " << endl;
+    
+    while(<CONDITION>) //<- Usually: "ctrlCPressed == false"
+    {
+	//Here is where you write your program.
+	//To write to the GPIO pins, use 'gpio<#>->setValGPIO("<Value>")'
+	<MAIN PROGRAM BODY>
+        
+        //Tests whether 'Ctrl^C' is pressed and deletes pin values. Change <#> to pin number.
+        if (ctrlCPressed == true) {
+            cout << "Ctrl^C Pressed" << endl;
+            cout << "Unexporting pins" << endl;
+            gpio<#>->unexportGPIO();
+            cout << "Deallocating GPIO Objects" << endl;
+            
+	    //Repeat these two lines for each pin being used.
+	    delete gpio<#>;
+            gpio<#> = 0;
+            
+	    break; //Breaks the program loop and exits the program
+        }
+    }
+
+    cout << "Exiting....." << endl;
+    return 0;
+}
+
+//Definition for sigHandler Function
+void sigHandler(int sig)
+{
+    write(0, "nCtrl^C pressed in sig handler", 32);
+    ctrlCPressed = true;
+}
+
+------------------------------------------------------------------------------------------
+END OF FILE
+------------------------------------------------------------------------------------------
